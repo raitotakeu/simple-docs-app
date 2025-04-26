@@ -1,0 +1,63 @@
+{% extends "base.html" %}
+{% block title %}SimpleDocs - Home{% endblock %}
+
+{% block content %}
+{% if logged_in %}
+<meta name="viewport" content="width=device-width, initial-scale=1"> <!-- Ensures proper scaling on mobile -->
+<link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css">
+<!-- Logged-in view: Docs Dashboard style -->
+<section class="dashboard-docs">
+    <h2>Your Documents</h2>
+    <a href="{{ url_for('create') }}" class="btn primary-btn">+ New Document</a>
+    <div class="doc-grid">
+        {% for doc in user_documents %}
+        <div class="doc-card">
+            <h3>{{ doc.title }}</h3>
+            <p>Last edited: {{ doc.updated_at.strftime('%Y-%m-%d %H:%M') if doc.updated_at else 'No edits yet' }}</p>
+            <a href="{{ url_for('edit', doc_id=doc.id) }}" class="btn secondary-btn">Open</a>
+        </div>
+        {% else %}
+        <p>You have no documents yet.</p>
+        {% endfor %}
+    </div>
+</section>
+
+{% else %}
+<!-- Guest view: Welcome hero -->
+<section class="hero">
+    <div class="hero-content">
+        <h1>Welcome to SimpleDocs</h1>
+        <link rel="stylesheet" href="{{ url_for('static', filename='style.css') }}">
+        <p>A simple and elegant way to manage your documents</p>
+        <div class="hero-buttons">
+            <a href="{{ url_for('register') }}" class="btn primary-btn">Sign-up</a>
+            <a href="{{ url_for('login') }}" class="btn secondary-btn">Login</a>
+        </div>
+    </div>
+    <div class="hero-image">
+        <img src="{{ url_for('static', filename='img/logo.png') }}" alt="Document Illustration">
+    </div>
+</section>
+
+<section class="features">
+    <h2>Features</h2>
+    <div class="feature-cards">
+        <div class="feature-card">
+            <i class="fas fa-file-alt"></i>
+            <h3>Create Documents</h3>
+            <p>Easily create and manage your documents in one place</p>
+        </div>
+        <div class="feature-card">
+            <i class="fas fa-edit"></i>
+            <h3>Edit Anytime</h3>
+            <p>Make changes to your documents whenever you need</p>
+        </div>
+        <div class="feature-card">
+            <i class="fas fa-lock"></i>
+            <h3>Secure Storage</h3>
+            <p>Your documents are securely stored and accessible only to you</p>
+        </div>
+    </div>
+</section>
+{% endif %}
+{% endblock %}

@@ -1,0 +1,40 @@
+{% extends "base.html" %}
+
+{% block title %}SimpleDocs - Dashboard{% endblock %}
+
+{% block content %}
+<link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css">
+<link rel="stylesheet" href="{{ url_for('static', filename='style.css') }}">
+
+<section class="dashboard">
+    <div class="dashboard-header">
+        <h2>Your Documents</h2>
+        <a href="{{ url_for('create') }}" class="btn primary-btn"><i class="fas fa-plus"></i> New Document</a>
+    </div>
+    
+    {% if documents %}
+        <div class="documents-grid">
+            {% for doc in documents %}
+                <div class="document-card">
+                    <h3>{{ doc.title }}</h3>
+                    <p class="document-preview">{{ doc.content[:100]|striptags }}{% if doc.content|length > 100 %}...{% endif %}</p>
+                    <div class="document-meta">
+                        <span class="document-date">Created: {{ doc.created_at.strftime('%b %d, %Y') }}</span>
+                        <span class="document-date">Updated: {{ doc.updated_at.strftime('%b %d, %Y') }}</span>
+                    </div>
+                    <div class="document-actions">
+                        <a href="{{ url_for('edit', doc_id=doc.id) }}" class="btn secondary-btn"><i class="fas fa-edit"></i> Edit</a>
+                        <a href="{{ url_for('delete', doc_id=doc.id) }}" class="btn danger-btn" onclick="return confirm('Are you sure you want to delete this document?')"><i class="fas fa-trash"></i> Delete</a>
+                    </div>
+                </div>
+            {% endfor %}
+        </div>
+    {% else %}
+        <div class="empty-state">
+            <i class="fas fa-file-alt empty-icon"></i>
+            <p>You don't have any documents yet.</p>
+            <a href="{{ url_for('create') }}" class="btn primary-btn">Create Your First Document</a>
+        </div>
+    {% endif %}
+</section>
+{% endblock %}
